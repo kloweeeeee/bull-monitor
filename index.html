@@ -4,455 +4,667 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BULL MONITOR v3 — 牛市末期监测系统</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap');
+/* ═══════════════════════════════════════════════════════
+   BULL MONITOR — 战术指挥中心主题
+   ═══════════════════════════════════════════════════════ */
+:root {
+  --bg: #06060e;
+  --surface: #0b0c16;
+  --surface2: #111225;
+  --surface3: #181a30;
+  --border: #1e2040;
+  --border2: #2a2d50;
+  --text: #e0e0f0;
+  --text-mid: #8888a8;
+  --text-dim: #555575;
+  --text-muted: #3a3a58;
+  --red: #ff2d55;
+  --red-light: rgba(255,45,85,0.1);
+  --red-glow: rgba(255,45,85,0.4);
+  --orange: #ff8800;
+  --orange-light: rgba(255,136,0,0.1);
+  --yellow: #ffd000;
+  --yellow-light: rgba(255,208,0,0.08);
+  --green: #00e676;
+  --green-light: rgba(0,230,118,0.08);
+  --gray: #607080;
+  --gray-light: rgba(96,112,128,0.12);
+  --accent: #3d5afe;
+  --font-display: 'Chakra Petch', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
 
-  :root {
-    --bg: #faf9f7;
-    --surface: #ffffff;
-    --surface2: #f5f3ef;
-    --surface3: #eeece8;
-    --border: #e2dfd9;
-    --border2: #cec9c0;
-    --text: #1a1917;
-    --text-mid: #5c5850;
-    --text-dim: #9c9690;
-    --text-muted: #c4beb8;
-    --red: #c02020;
-    --red-light: #fdf0f0;
-    --orange: #c05820;
-    --orange-light: #fdf3ec;
-    --yellow: #a08018;
-    --yellow-light: #fdf8e8;
-    --green: #388060;
-    --green-light: #ecf5f0;
-    --gray: #6e6a64;
-    --gray-light: #f0eeea;
-    --font-sans: 'Inter', -apple-system, system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', 'SF Mono', monospace;
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { font-size: 14px; scroll-behavior: smooth; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    line-height: 1.5;
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; scroll-behavior: smooth; }
 
-  /* ── HEADER ── */
-  header {
-    background: var(--text);
-    color: var(--surface);
-    padding: 0 40px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    align-items: center;
-    height: 56px;
-    border-bottom: 3px solid var(--red);
-  }
-  .header-left { display: flex; align-items: baseline; gap: 20px; }
-  .header-eyebrow {
-    font-size: 8px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-family: var(--font-sans);
-  }
-  .header-title {
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--surface);
-  }
-  .header-date {
-    font-size: 10px;
-    color: var(--text-dim);
-    font-family: var(--font-mono);
-  }
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-  }
-  .header-time {
-    font-size: 20px;
-    font-weight: 600;
-    font-family: var(--font-mono);
-    color: var(--surface);
-    letter-spacing: 0.05em;
-  }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
 
-  /* ── HERO PANEL ── */
-  .hero {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 32px 40px;
-    display: grid;
-    grid-template-columns: 180px 1fr auto;
-    gap: 40px;
-    align-items: center;
-  }
-  .hero-score {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-  .hero-score-num {
-    font-size: 72px;
-    font-weight: 700;
-    letter-spacing: -0.04em;
-    line-height: 1;
-    font-family: var(--font-mono);
-    color: var(--text);
-  }
-  .hero-score-num.s0 { color: var(--green); }
-  .hero-score-num.s1 { color: var(--gray); }
-  .hero-score-num.s2 { color: var(--yellow); }
-  .hero-score-num.s3 { color: var(--orange); }
-  .hero-score-num.s4 { color: var(--red); }
-  .hero-score-label {
-    font-size: 8px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    font-family: var(--font-sans);
-  }
-  .hero-content { display: flex; flex-direction: column; gap: 8px; }
-  .hero-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: 0.02em;
-  }
-  .hero-title.s4 { color: var(--red); }
-  .hero-desc {
-    font-size: 12px;
-    color: var(--text-mid);
-    line-height: 1.75;
-    max-width: 680px;
-    font-family: var(--font-sans);
-  }
-  .hero-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-  .tag {
-    font-size: 9px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    padding: 3px 9px;
-    border-radius: 2px;
-    font-family: var(--font-sans);
-    white-space: nowrap;
-  }
-  .tag-red { background: var(--red-light); color: var(--red); }
-  .tag-orange { background: var(--orange-light); color: var(--orange); }
-  .tag-yellow { background: var(--yellow-light); color: var(--yellow); }
-  .tag-green { background: var(--green-light); color: var(--green); }
-  .hero-metrics {
-    display: flex;
-    gap: 0;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  .hero-metric {
-    padding: 12px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    border-right: 1px solid var(--border);
-    background: var(--surface2);
-  }
-  .hero-metric:last-child { border-right: none; }
-  .hero-metric-num {
-    font-size: 26px;
-    font-weight: 700;
-    font-family: var(--font-mono);
-    line-height: 1;
-  }
-  .hero-metric-label {
-    font-size: 8px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    font-family: var(--font-sans);
-  }
+/* 背景网格图案 */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(61,90,254,0.06) 0%, transparent 60%),
+    radial-gradient(circle, var(--text-muted) 0.5px, transparent 0.5px);
+  background-size: 100% 100%, 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
 
-  /* ── CATEGORY PANELS ── */
-  .cat-panel {
-    margin: 16px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  .cat-header {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface2);
-  }
-  .cat-marker {
-    width: 4px;
-    height: 32px;
-    border-radius: 2px;
-  }
-  .cat-title-group { display: flex; flex-direction: column; gap: 1px; }
-  .cat-title {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text);
-  }
-  .cat-subtitle {
-    font-size: 9px;
-    color: var(--text-dim);
-    letter-spacing: 0.06em;
-    font-family: var(--font-sans);
-  }
-  .cat-status { display: flex; gap: 12px; align-items: center; }
-  .cat-badge {
-    font-size: 9px;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-family: var(--font-sans);
-    letter-spacing: 0.04em;
-  }
-  .cat-badge.red { background: var(--red-light); color: var(--red); }
-  .cat-badge.orange { background: var(--orange-light); color: var(--orange); }
-  .cat-badge.yellow { background: var(--yellow-light); color: var(--yellow); }
-  .cat-badge.green { background: var(--green-light); color: var(--green); }
-  .cat-badge.gray { background: var(--gray-light); color: var(--gray); }
+/* 扫描线动画 */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(61,90,254,0.4), rgba(0,230,118,0.3), transparent);
+  animation: scanline 8s linear infinite;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+@keyframes scanline {
+  0% { top: -2px; }
+  100% { top: 100vh; }
+}
 
-  /* INDICATOR CARDS GRID */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 0;
-  }
+/* ── HEADER ── */
+header {
+  background: linear-gradient(180deg, #0d0e1a 0%, var(--bg) 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  height: 52px;
+  position: relative;
+  z-index: 1;
+}
+header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--red) 30%, var(--orange) 60%, var(--yellow) 80%, transparent 100%);
+  opacity: 0.5;
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.header-eyebrow {
+  font-size: 8px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+.header-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text);
+  font-family: var(--font-display);
+  position: relative;
+}
+.header-title::before {
+  content: '◆';
+  color: var(--red);
+  font-size: 8px;
+  margin-right: 8px;
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.header-date {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  letter-spacing: 0.05em;
+}
+.header-right { display: flex; align-items: center; gap: 16px; }
+.header-time {
+  font-size: 18px;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  color: var(--green);
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 12px rgba(0,230,118,0.4);
+}
 
-  .ind-card {
-    padding: 18px 20px;
-    border-right: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    min-height: 180px;
-    transition: background 0.15s;
-  }
-  .ind-card:hover { background: var(--surface2); }
-  /* remove border from last in each row */
-  .ind-card:nth-child(3n) { border-right: none; }
-  /* remove bottom border from last row */
-  .ind-card:nth-last-child(-n+3) { border-bottom: none; }
+/* ── HERO PANEL ── */
+.hero {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 40px 32px;
+  display: grid;
+  grid-template-columns: 220px 1fr auto;
+  gap: 40px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+/* 英雄区域背景光晕 */
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 110px;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(61,90,254,0.06), transparent 70%);
+  pointer-events: none;
+}
 
-  /* card top row: name + signal badge */
-  .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .card-name {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.4;
-  }
-  .card-sub {
-    font-size: 9px;
-    color: var(--text-dim);
-    font-family: var(--font-sans);
-    margin-top: 1px;
-  }
-  .card-badge {
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 3px 8px;
-    border-radius: 2px;
-    white-space: nowrap;
-    font-family: var(--font-sans);
-    flex-shrink: 0;
-  }
-  .cb-0 { background: var(--green-light); color: var(--green); }
-  .cb-1 { background: var(--gray-light); color: var(--gray); }
-  .cb-2 { background: var(--yellow-light); color: var(--yellow); }
-  .cb-3 { background: var(--orange-light); color: var(--orange); }
-  .cb-4 { background: var(--red-light); color: var(--red); }
+/* 圆形风险仪表盘 */
+.hero-score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+.gauge-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+.gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+.gauge-bg {
+  fill: none;
+  stroke: var(--surface3);
+  stroke-width: 4;
+}
+.gauge-fill {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.23, 1, 0.32, 1), stroke 0.8s ease;
+  filter: drop-shadow(0 0 6px var(--red-glow));
+}
+.gauge-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.hero-score-num {
+  font-size: 56px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  font-family: var(--font-mono);
+  color: var(--text);
+}
+.hero-score-num.s0 { color: var(--green); text-shadow: 0 0 20px rgba(0,230,118,0.3); }
+.hero-score-num.s1 { color: var(--gray); }
+.hero-score-num.s2 { color: var(--yellow); text-shadow: 0 0 20px rgba(255,208,0,0.3); }
+.hero-score-num.s3 { color: var(--orange); text-shadow: 0 0 20px rgba(255,136,0,0.4); }
+.hero-score-num.s4 { color: var(--red); text-shadow: 0 0 24px var(--red-glow); animation: dangerPulse 1.5s ease-in-out infinite; }
+@keyframes dangerPulse { 0%,100%{opacity:1} 50%{opacity:0.7} }
+.hero-score-label {
+  font-size: 8px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-family: var(--font-display);
+}
 
-  /* value row */
-  .card-value-row {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-  }
-  .card-value {
-    font-size: 32px;
-    font-weight: 700;
-    font-family: var(--font-mono);
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: var(--text);
-  }
-  .card-value.v0 { color: var(--green); }
-  .card-value.v1 { color: var(--gray); }
-  .card-value.v2 { color: var(--yellow); }
-  .card-value.v3 { color: var(--orange); }
-  .card-value.v4 { color: var(--red); }
-  .card-unit {
-    font-size: 11px;
-    color: var(--text-dim);
-    font-family: var(--font-sans);
-  }
-  .card-threshold {
-    font-size: 9px;
-    color: var(--text-muted);
-    font-family: var(--font-sans);
-    margin-left: auto;
-  }
+/* 威胁等级指示灯 */
+.threat-level {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+.threat-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--surface3);
+  transition: background 0.5s, box-shadow 0.5s;
+}
+.threat-dot.active-green { background: var(--green); box-shadow: 0 0 6px rgba(0,230,118,0.5); }
+.threat-dot.active-yellow { background: var(--yellow); box-shadow: 0 0 6px rgba(255,208,0,0.5); }
+.threat-dot.active-orange { background: var(--orange); box-shadow: 0 0 6px rgba(255,136,0,0.5); }
+.threat-dot.active-red { background: var(--red); box-shadow: 0 0 6px var(--red-glow); animation: blink 1.2s ease-in-out infinite; }
 
-  /* bar */
-  .card-bar-wrap { display: flex; align-items: center; gap: 8px; }
-  .card-bar-track {
-    flex: 1;
-    height: 5px;
-    background: var(--surface3);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .card-bar-fill {
-    height: 100%;
-    border-radius: 3px;
-    transition: width 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  .card-bar-pct {
-    font-size: 9px;
-    color: var(--text-dim);
-    font-family: var(--font-mono);
-    min-width: 30px;
-    text-align: right;
-  }
+.hero-content { display: flex; flex-direction: column; gap: 10px; }
+.hero-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.02em;
+  font-family: var(--font-display);
+}
+.hero-title.s4 { color: var(--red); text-shadow: 0 0 16px var(--red-glow); }
+.hero-desc {
+  font-size: 12px;
+  color: var(--text-mid);
+  line-height: 1.8;
+  max-width: 600px;
+  font-family: var(--font-body);
+}
+.hero-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.tag {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 3px 10px;
+  border-radius: 1px;
+  font-family: var(--font-display);
+  white-space: nowrap;
+  border: 1px solid;
+}
+.tag-red { background: var(--red-light); color: var(--red); border-color: rgba(255,45,85,0.25); }
+.tag-orange { background: var(--orange-light); color: var(--orange); border-color: rgba(255,136,0,0.25); }
+.tag-yellow { background: var(--yellow-light); color: var(--yellow); border-color: rgba(255,208,0,0.2); }
+.tag-green { background: var(--green-light); color: var(--green); border-color: rgba(0,230,118,0.2); }
 
-  /* sparkline */
-  .card-spark {
-    height: 36px;
-    margin-top: 2px;
-  }
-  .card-spark svg { width: 100%; height: 100%; overflow: visible; }
+/* 英雄区域右侧指标卡 */
+.hero-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.hero-metric {
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--surface);
+  transition: background 0.2s;
+}
+.hero-metric:hover { background: var(--surface2); }
+.hero-metric-num {
+  font-size: 28px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  line-height: 1;
+  min-width: 48px;
+}
+.hero-metric-label {
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-family: var(--font-display);
+}
 
-  /* note / annotation */
-  .card-note {
-    margin-top: auto;
-    padding-top: 8px;
-    border-top: 1px solid var(--border);
-  }
-  .card-note-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    user-select: none;
-  }
-  .card-note-toggle {
-    font-size: 8px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    font-family: var(--font-sans);
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .card-note-toggle:hover { color: var(--text-mid); }
-  .card-note-toggle::before { content: '▶'; font-size: 6px; transition: transform 0.2s; }
-  .card-note.open .card-note-toggle::before { transform: rotate(90deg); }
-  .card-note-body {
-    display: none;
-    padding-top: 8px;
-    font-size: 10px;
-    color: var(--text-mid);
-    line-height: 1.7;
-    font-family: var(--font-sans);
-  }
-  .card-note.open .card-note-body { display: block; }
-  .card-note-body strong { color: var(--text); display: block; margin-bottom: 3px; font-size: 8px; letter-spacing: 0.1em; text-transform: uppercase; }
+/* ── CATEGORY PANELS ── */
+.cat-panel {
+  margin: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+.cat-header {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.cat-marker {
+  width: 3px;
+  height: 28px;
+  border-radius: 1px;
+}
+.cat-title-group { display: flex; flex-direction: column; gap: 1px; }
+.cat-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text);
+  font-family: var(--font-display);
+}
+.cat-subtitle {
+  font-size: 9px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  font-family: var(--font-mono);
+}
+.cat-status { display: flex; gap: 8px; align-items: center; }
+.cat-badge {
+  font-size: 8px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 1px;
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid;
+}
+.cat-badge.red { background: var(--red-light); color: var(--red); border-color: rgba(255,45,85,0.3); }
+.cat-badge.orange { background: var(--orange-light); color: var(--orange); border-color: rgba(255,136,0,0.3); }
+.cat-badge.yellow { background: var(--yellow-light); color: var(--yellow); border-color: rgba(255,208,0,0.25); }
+.cat-badge.green { background: var(--green-light); color: var(--green); border-color: rgba(0,230,118,0.25); }
+.cat-badge.gray { background: var(--gray-light); color: var(--gray); border-color: rgba(96,112,128,0.2); }
 
-  /* skeleton */
-  .skel { background: linear-gradient(90deg, var(--surface3) 25%, var(--border) 50%, var(--surface3) 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; border-radius: 2px; }
-  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+/* ── INDICATOR CARDS GRID ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0;
+}
 
-  /* footer */
-  footer {
-    background: var(--text);
-    color: var(--text-dim);
-    padding: 14px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 16px;
-  }
-  .footer-left { display: flex; align-items: center; gap: 12px; font-size: 9px; font-family: var(--font-sans); }
-  .footer-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-  .dot-ok { background: var(--green); }
-  .dot-err { background: var(--red); }
-  .dot-loading { background: var(--yellow); animation: pulse 1s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-  .footer-right { display: flex; align-items: center; gap: 16px; }
-  .footer-time { font-size: 9px; color: var(--text-dim); font-family: var(--font-mono); }
-  .footer-refresh {
-    background: none;
-    border: 1px solid var(--border2);
-    color: var(--text-dim);
-    font-size: 9px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    cursor: pointer;
-    font-family: var(--font-sans);
-    border-radius: 2px;
-    transition: all 0.2s;
-  }
-  .footer-refresh:hover { border-color: var(--text-dim); color: var(--surface); }
+.ind-card {
+  padding: 16px 20px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 180px;
+  transition: background 0.2s, border-color 0.2s;
+  position: relative;
+  animation: cardFadeIn 0.6s ease backwards;
+}
+/* 交错动画延迟 */
+.ind-card:nth-child(1) { animation-delay: 0.05s; }
+.ind-card:nth-child(2) { animation-delay: 0.1s; }
+.ind-card:nth-child(3) { animation-delay: 0.15s; }
+.ind-card:nth-child(4) { animation-delay: 0.2s; }
+.ind-card:nth-child(5) { animation-delay: 0.25s; }
+.ind-card:nth-child(6) { animation-delay: 0.3s; }
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ind-card:hover {
+  background: var(--surface2);
+  border-color: var(--border2);
+}
+.ind-card:nth-child(3n) { border-right: none; }
+.ind-card:nth-last-child(-n+3) { border-bottom: none; }
 
-  /* responsive */
-  @media (max-width: 1100px) {
-    .cards-grid { grid-template-columns: repeat(2, 1fr); }
-    .ind-card:nth-child(3n) { border-right: 1px solid var(--border); }
-    .ind-card:nth-child(2n) { border-right: none; }
-    .ind-card:nth-last-child(-n+3) { border-bottom: 1px solid var(--border); }
-    .ind-card:nth-last-child(-n+2) { border-bottom: none; }
-    .hero { grid-template-columns: 1fr; gap: 20px; }
-  }
-  @media (max-width: 768px) {
-    header { padding: 0 20px; }
-    .hero { padding: 20px; grid-template-columns: 1fr; }
-    .hero-metrics { flex-wrap: wrap; }
-    .cat-panel { margin: 12px; }
-    .cat-header { padding: 12px 16px; }
-    .ind-card { padding: 14px 16px; }
-    .cards-grid { grid-template-columns: 1fr; }
-    .ind-card { border-right: none !important; border-bottom: 1px solid var(--border); }
-    .ind-card:last-child { border-bottom: none; }
-    footer { padding: 12px 20px; flex-direction: column; gap: 10px; }
-  }
+/* 卡片顶部：名称 + 信号灯 */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+.card-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+  font-family: var(--font-display);
+}
+.card-sub {
+  font-size: 9px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  margin-top: 2px;
+}
+/* 信号灯徽章 */
+.card-badge {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 1px;
+  white-space: nowrap;
+  font-family: var(--font-display);
+  flex-shrink: 0;
+  border: 1px solid;
+  position: relative;
+}
+/* 信号灯小圆点 */
+.card-badge::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+}
+.cb-0 { background: var(--green-light); color: var(--green); border-color: rgba(0,230,118,0.3); }
+.cb-0::before { background: var(--green); box-shadow: 0 0 4px var(--green); }
+.cb-1 { background: var(--gray-light); color: var(--gray); border-color: rgba(96,112,128,0.2); }
+.cb-1::before { background: var(--gray); }
+.cb-2 { background: var(--yellow-light); color: var(--yellow); border-color: rgba(255,208,0,0.25); }
+.cb-2::before { background: var(--yellow); box-shadow: 0 0 4px var(--yellow); }
+.cb-3 { background: var(--orange-light); color: var(--orange); border-color: rgba(255,136,0,0.3); }
+.cb-3::before { background: var(--orange); box-shadow: 0 0 4px var(--orange); }
+.cb-4 { background: var(--red-light); color: var(--red); border-color: rgba(255,45,85,0.35); }
+.cb-4::before { background: var(--red); box-shadow: 0 0 6px var(--red); animation: blink 1.5s ease-in-out infinite; }
+
+/* 数值行 */
+.card-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.card-value {
+  font-size: 32px;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--text);
+}
+.card-value.v0 { color: var(--green); text-shadow: 0 0 12px rgba(0,230,118,0.25); }
+.card-value.v1 { color: var(--gray); }
+.card-value.v2 { color: var(--yellow); text-shadow: 0 0 12px rgba(255,208,0,0.25); }
+.card-value.v3 { color: var(--orange); text-shadow: 0 0 14px rgba(255,136,0,0.3); }
+.card-value.v4 { color: var(--red); text-shadow: 0 0 16px var(--red-glow); }
+.card-unit {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+.card-threshold {
+  font-size: 8px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  margin-left: auto;
+}
+
+/* 进度条 */
+.card-bar-wrap { display: flex; align-items: center; gap: 8px; }
+.card-bar-track {
+  flex: 1;
+  height: 3px;
+  background: var(--surface3);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.card-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+}
+/* 进度条发光效果 */
+.card-bar-fill::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -1px;
+  bottom: -1px;
+  width: 8px;
+  border-radius: 50%;
+  filter: blur(2px);
+}
+.card-bar-pct {
+  font-size: 9px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  min-width: 30px;
+  text-align: right;
+}
+
+/* 迷你折线图 */
+.card-spark {
+  height: 36px;
+  margin-top: 2px;
+}
+.card-spark svg { width: 100%; height: 100%; overflow: visible; }
+
+/* 注释/说明展开区域 */
+.card-note {
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.card-note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+.card-note-toggle {
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  font-family: var(--font-display);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s;
+}
+.card-note-toggle:hover { color: var(--text-mid); }
+.card-note-toggle::before { content: '▸'; font-size: 8px; transition: transform 0.2s; }
+.card-note.open .card-note-toggle::before { transform: rotate(90deg); }
+.card-note-body {
+  display: none;
+  padding-top: 8px;
+  font-size: 10px;
+  color: var(--text-mid);
+  line-height: 1.8;
+  font-family: var(--font-body);
+}
+.card-note.open .card-note-body { display: block; }
+.card-note-body strong {
+  color: var(--text);
+  display: block;
+  margin-bottom: 3px;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-family: var(--font-display);
+}
+
+/* 骨架屏加载动画 */
+.skel {
+  background: linear-gradient(90deg, var(--surface3) 25%, var(--border) 50%, var(--surface3) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+  border-radius: 1px;
+}
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+/* ── FOOTER ── */
+footer {
+  background: var(--surface);
+  color: var(--text-dim);
+  padding: 12px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 1;
+}
+.footer-left { display: flex; align-items: center; gap: 12px; font-size: 9px; font-family: var(--font-mono); color: var(--text-dim); }
+.footer-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.dot-ok { background: var(--green); box-shadow: 0 0 6px rgba(0,230,118,0.4); }
+.dot-err { background: var(--red); box-shadow: 0 0 6px var(--red-glow); }
+.dot-loading { background: var(--yellow); animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.footer-right { display: flex; align-items: center; gap: 16px; }
+.footer-time { font-size: 9px; color: var(--text-dim); font-family: var(--font-mono); }
+.footer-refresh {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text-dim);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-family: var(--font-display);
+  border-radius: 1px;
+  transition: all 0.25s;
+}
+.footer-refresh:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 12px rgba(61,90,254,0.2);
+}
+
+/* ── 响应式 ── */
+@media (max-width: 1100px) {
+  .cards-grid { grid-template-columns: repeat(2, 1fr); }
+  .ind-card:nth-child(3n) { border-right: 1px solid var(--border); }
+  .ind-card:nth-child(2n) { border-right: none; }
+  .ind-card:nth-last-child(-n+3) { border-bottom: 1px solid var(--border); }
+  .ind-card:nth-last-child(-n+2) { border-bottom: none; }
+  .hero { grid-template-columns: 1fr; gap: 24px; }
+}
+@media (max-width: 768px) {
+  header { padding: 0 16px; }
+  .hero { padding: 20px 16px; grid-template-columns: 1fr; }
+  .hero-metrics { flex-direction: row; }
+  .hero-metric { padding: 10px 16px; flex: 1; }
+  .cat-panel { margin: 8px; }
+  .cat-header { padding: 10px 16px; }
+  .ind-card { padding: 12px 16px; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .ind-card { border-right: none !important; border-bottom: 1px solid var(--border); }
+  .ind-card:last-child { border-bottom: none; }
+  footer { padding: 10px 16px; flex-direction: column; gap: 8px; }
+  .gauge-wrap { width: 120px; height: 120px; }
+  .hero-score-num { font-size: 42px; }
+}
 </style>
 </head>
 <body>
 
 <header>
   <div class="header-left">
-    <span class="header-eyebrow">Quantitative Early Warning System</span>
+    <span class="header-eyebrow">Quantitative Early Warning</span>
     <span class="header-title">Bull Monitor</span>
     <span class="header-date" id="header-date">--</span>
   </div>
@@ -461,15 +673,35 @@
   </div>
 </header>
 
-<!-- HERO PANEL -->
+<!-- 英雄区域：风险仪表盘 + 状态摘要 -->
 <section class="hero">
   <div class="hero-score">
-    <span class="hero-score-num" id="overall-score">--</span>
+    <div class="gauge-wrap">
+      <!-- 圆形仪表盘 SVG -->
+      <svg class="gauge-svg" viewBox="0 0 160 160">
+        <circle class="gauge-bg" cx="80" cy="80" r="70"/>
+        <circle class="gauge-fill" id="gauge-arc" cx="80" cy="80" r="70"
+                stroke-dasharray="439.82"
+                stroke-dashoffset="439.82"
+                stroke="var(--green)"/>
+      </svg>
+      <div class="gauge-center">
+        <span class="hero-score-num" id="overall-score">--</span>
+      </div>
+    </div>
     <span class="hero-score-label">风险指数</span>
+    <!-- 威胁等级指示灯：5个灯 -->
+    <div class="threat-level">
+      <span class="threat-dot" id="td0"></span>
+      <span class="threat-dot" id="td1"></span>
+      <span class="threat-dot" id="td2"></span>
+      <span class="threat-dot" id="td3"></span>
+      <span class="threat-dot" id="td4"></span>
+    </div>
   </div>
   <div class="hero-content">
-    <div class="hero-title" id="overall-title">加载中...</div>
-    <div class="hero-desc" id="overall-desc">正在连接数据源...</div>
+    <div class="hero-title" id="overall-title">系统初始化...</div>
+    <div class="hero-desc" id="overall-desc">正在连接数据源，加载市场指标...</div>
     <div class="hero-tags" id="overall-tags"></div>
   </div>
   <div class="hero-metrics">
@@ -488,30 +720,30 @@
   </div>
 </section>
 
-<!-- CATEGORY PANELS (injected by JS) -->
+<!-- 分类面板（由 JS 注入） -->
 <main id="main-content"></main>
 
 <footer>
   <div class="footer-left">
     <span><span class="footer-dot dot-loading" id="footer-dot"></span> <span id="footer-status">连接中</span></span>
-    <span>·</span>
-    <span>东方财富 / 同花顺 / 集思录 / 证监会 / 央行官网</span>
-    <span>·</span>
+    <span style="color:var(--text-muted)">│</span>
+    <span>东方财富 / 同花顺 / 集思录 / 证监会 / 央行</span>
+    <span style="color:var(--text-muted)">│</span>
     <span>akshare + Pyodide</span>
   </div>
   <div class="footer-right">
     <span class="footer-time" id="footer-time">--</span>
-    <button class="footer-refresh" onclick="location.reload()">↺ 刷新</button>
+    <button class="footer-refresh" onclick="location.reload()">↺ REFRESH</button>
   </div>
 </footer>
 
 <script type="module">
-// ─────────────────────────────────────────────────────
-// 21 INDICATORS CONFIG
-// ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// 21 项指标配置
+// ═══════════════════════════════════════════════════════
 const CATS = [
   {
-    id: 'valuation', label: '一、估值类', sub: '泡沫核心指标', color: '#c02020',
+    id: 'valuation', label: '一、估值类', sub: 'BUBBLE CORE METRICS', color: '#ff2d55',
     indicators: [
       {
         id: 'winda_pe', name: '万得全A PE(TTM)', sub: '近10年分位',
@@ -549,7 +781,7 @@ const CATS = [
     ]
   },
   {
-    id: 'capital', label: '二、资金类', sub: '增量资金衰竭信号', color: '#c05820',
+    id: 'capital', label: '二、资金类', sub: 'CAPITAL FLOW EXHAUSTION', color: '#ff8800',
     indicators: [
       {
         id: 'volume_amount', name: '两市日成交额', sub: '量价背离监测',
@@ -603,7 +835,7 @@ const CATS = [
     ]
   },
   {
-    id: 'sentiment', label: '三、情绪类', sub: '投机狂热 + 分歧加剧', color: '#a08018',
+    id: 'sentiment', label: '三、情绪类', sub: 'SPECULATIVE FRENZY INDEX', color: '#ffd000',
     indicators: [
       {
         id: 'turnover_rate', name: '全市场换手率', sub: '全A股日均换手率',
@@ -649,7 +881,7 @@ const CATS = [
     ]
   },
   {
-    id: 'liquidity', label: '四、宏观流动性', sub: '货币政策收紧拐点', color: '#388060',
+    id: 'liquidity', label: '四、宏观流动性', sub: 'MONETARY POLICY PIVOT', color: '#00e676',
     indicators: [
       {
         id: 'dr007', name: 'DR007', sub: '银行间7天质押回购利率',
@@ -679,7 +911,7 @@ const CATS = [
     ]
   },
   {
-    id: 'structure', label: '五、市场结构', sub: '抱团瓦解前兆', color: '#6e6a64',
+    id: 'structure', label: '五、市场结构', sub: 'CROWDING UNWIND SIGNAL', color: '#607080',
     indicators: [
       {
         id: 'small_large_ratio', name: '中证1000/沪深300', sub: '大小盘风格比值',
@@ -710,15 +942,15 @@ const CATS = [
   },
 ];
 
-// ─────────────────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// 状态管理
+// ═══════════════════════════════════════════════════════
 let allData = {};
 let pyodideReady = false;
 
-// ─────────────────────────────────────────────────────
-// CLOCK
-// ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// 时钟
+// ═══════════════════════════════════════════════════════
 function updateClock() {
   const now = new Date();
   document.getElementById('clock').textContent = now.toLocaleTimeString('zh-CN', { hour12: false, timeZone: 'Asia/Shanghai' });
@@ -727,9 +959,9 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// ─────────────────────────────────────────────────────
-// SIGNAL
-// ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// 信号等级判定
+// ═══════════════════════════════════════════════════════
 function getLevel(v, t, invert = false) {
   if (invert) {
     if (v <= t[3]) return 4;
@@ -752,11 +984,12 @@ const SIG = [
   ['cb-3','v3','已触发'],
   ['cb-4','v4','危险'],
 ];
-const BAR_COLORS = ['#388060','#9c9690','#a08018','#c05820','#c02020'];
+const BAR_COLORS = ['#00e676','#607080','#ffd000','#ff8800','#ff2d55'];
+const GAUGE_COLORS = ['#00e676','#607080','#ffd000','#ff8800','#ff2d55'];
 
-// ─────────────────────────────────────────────────────
-// BUILD UI
-// ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// 构建界面
+// ═══════════════════════════════════════════════════════
 function buildUI() {
   const main = document.getElementById('main-content');
   main.innerHTML = CATS.map(cat => `
@@ -768,7 +1001,7 @@ function buildUI() {
           <div class="cat-subtitle">${cat.sub}</div>
         </div>
         <div class="cat-status" id="cat-status-${cat.id}">
-          <span class="cat-badge gray">加载中</span>
+          <span class="cat-badge gray">LOADING</span>
         </div>
       </div>
       <div class="cards-grid">
@@ -779,7 +1012,7 @@ function buildUI() {
               <div class="card-name">${ind.name}</div>
               <div class="card-sub">${ind.sub}</div>
             </div>
-            <span class="card-badge cb-1" id="badge-${ind.id}">加载</span>
+            <span class="card-badge cb-1" id="badge-${ind.id}">INIT</span>
           </div>
 
           <div class="card-value-row">
@@ -792,7 +1025,7 @@ function buildUI() {
 
           <div class="card-bar-wrap">
             <div class="card-bar-track">
-              <div class="card-bar-fill" id="bar-${ind.id}" style="width:0%;background:#9c9690;"></div>
+              <div class="card-bar-fill" id="bar-${ind.id}" style="width:0%;background:#607080;"></div>
             </div>
             <span class="card-bar-pct" id="pct-${ind.id}">--</span>
           </div>
@@ -824,9 +1057,39 @@ window.toggleNote = function(id) {
   if (el) el.classList.toggle('open');
 };
 
-// ─────────────────────────────────────────────────────
-// UPDATE
-// ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// 更新仪表盘弧线动画
+// ═══════════════════════════════════════════════════════
+function updateGauge(score, level) {
+  const arc = document.getElementById('gauge-arc');
+  if (!arc) return;
+  const circumference = 2 * Math.PI * 70; // r=70
+  const offset = circumference - (score / 100) * circumference;
+  arc.style.strokeDashoffset = offset;
+  arc.style.stroke = GAUGE_COLORS[level];
+  // 更新发光效果颜色
+  const glowColor = GAUGE_COLORS[level] + '55';
+  arc.style.filter = `drop-shadow(0 0 8px ${glowColor})`;
+}
+
+// ═══════════════════════════════════════════════════════
+// 更新威胁等级指示灯
+// ═══════════════════════════════════════════════════════
+function updateThreatDots(level) {
+  const colorMap = ['active-green','active-green','active-yellow','active-orange','active-red'];
+  for (let i = 0; i < 5; i++) {
+    const dot = document.getElementById(`td${i}`);
+    if (!dot) continue;
+    dot.className = 'threat-dot';
+    if (i <= level) {
+      dot.classList.add(colorMap[level]);
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// 更新指标
+// ═══════════════════════════════════════════════════════
 window.updateIndicator = function(id, value, spark) {
   let ind = null;
   for (const cat of CATS) {
@@ -839,23 +1102,22 @@ window.updateIndicator = function(id, value, spark) {
   const lv = getLevel(value, ind.thresholds, ind.invertThresholds);
   const [bc, vc, sl] = SIG[lv];
 
-  // badge
+  // 信号灯徽章
   const badge = document.getElementById(`badge-${id}`);
   badge.className = `card-badge ${bc}`;
   badge.textContent = sl;
 
-  // value
+  // 数值
   const valEl = document.getElementById(`val-${id}`);
   valEl.className = `card-value ${vc}`;
   valEl.textContent = isNaN(value) ? '--' :
     (Number.isInteger(value) || ind.unit === '' || ind.unit === '倍' || ind.unit === '比值'
       ? value : value.toFixed(2));
 
-  // bar: normalize to max threshold
+  // 进度条
   const maxThresh = ind.thresholds[ind.thresholds.length - 1];
   let barPct;
   if (ind.invertThresholds) {
-    // for metrics like north_flow where negative is bad
     const range = Math.abs(ind.thresholds[0] - ind.thresholds[3]);
     barPct = Math.min(100, Math.abs(value - ind.thresholds[0]) / range * 100);
   } else {
@@ -865,9 +1127,11 @@ window.updateIndicator = function(id, value, spark) {
   const pctEl = document.getElementById(`pct-${id}`);
   barEl.style.width = barPct + '%';
   barEl.style.background = BAR_COLORS[lv];
+  // 进度条尾端发光
+  barEl.style.boxShadow = `0 0 6px ${BAR_COLORS[lv]}44`;
   pctEl.textContent = barPct.toFixed(0) + '%';
 
-  // sparkline
+  // 迷你折线图
   if (spark && spark.length > 1) drawSpark(id, spark, lv);
 
   updateOverall();
@@ -890,25 +1154,24 @@ function drawSpark(id, data, lv) {
   svg.innerHTML = `
     <defs>
       <linearGradient id="sg-${id}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${col}" stop-opacity="0.15"/>
+        <stop offset="0%" stop-color="${col}" stop-opacity="0.2"/>
         <stop offset="100%" stop-color="${col}" stop-opacity="0"/>
       </linearGradient>
     </defs>
     <polygon points="${pts.join(' ')} ${w-pad},${h-pad} ${pad},${h-pad}" fill="url(#sg-${id})"/>
-    <polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="1.8" stroke-linejoin="round"/>
-    <circle cx="${pts[pts.length-1].split(',')[0]}" cy="${pts[pts.length-1].split(',')[1]}" r="3" fill="${col}"/>
+    <polyline points="${pts.join(' ')}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" opacity="0.8"/>
+    <circle cx="${pts[pts.length-1].split(',')[0]}" cy="${pts[pts.length-1].split(',')[1]}" r="2.5" fill="${col}" style="filter:drop-shadow(0 0 3px ${col})"/>
   `;
 }
 
-// ─────────────────────────────────────────────────────
-// OVERALL
-// ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// 总体风险评估
+// ═══════════════════════════════════════════════════════
 function updateOverall() {
   const allInd = CATS.flatMap(c => c.indicators);
   const scored = allInd.filter(ind => !isNaN(allData[ind.id]?.value));
   if (scored.length < 3) return;
 
-  // Normalized score (0-100)
   let total = 0;
   scored.forEach(ind => {
     const v = allData[ind.id].value;
@@ -929,12 +1192,18 @@ function updateOverall() {
   scoreEl.textContent = isNaN(overall) ? '--' : Math.round(overall);
   scoreEl.className = `hero-score-num s${lv}`;
 
+  // 更新仪表盘弧线
+  updateGauge(Math.round(overall), lv);
+
+  // 更新威胁指示灯
+  updateThreatDots(lv);
+
   const titles = [
-    ['市场整体稳健', false],
-    ['情绪略有升温', false],
-    ['进入偏热区域', false],
-    ['高估信号聚集', false],
-    ['末期风险显著', true],
+    ['MARKET STABLE · 市场整体稳健', false],
+    ['WARMING UP · 情绪略有升温', false],
+    ['OVERHEATING · 进入偏热区域', false],
+    ['ALERT · 高估信号聚集', false],
+    ['CRITICAL · 末期风险显著', true],
   ];
   const titleEl = document.getElementById('overall-title');
   titleEl.textContent = titles[lv][0];
@@ -949,7 +1218,7 @@ function updateOverall() {
   ];
   document.getElementById('overall-desc').textContent = descs[lv];
 
-  // Tags
+  // 风险标签
   const fired = scored.filter(ind => getLevel(allData[ind.id].value, ind.thresholds, ind.invertThresholds) >= 3);
   const warn = scored.filter(ind => getLevel(allData[ind.id].value, ind.thresholds, ind.invertThresholds) === 2);
   const tagsEl = document.getElementById('overall-tags');
@@ -959,7 +1228,7 @@ function updateOverall() {
     `<span class="tag tag-orange">⚠ ${ind.name}</span>`
   ).join('');
 
-  // Counts
+  // 计数
   document.getElementById('h-triggered').textContent = fired.length;
   document.getElementById('h-warning').textContent = warn.length;
   document.getElementById('h-ok').textContent = scored.length - fired.length - warn.length;
@@ -978,13 +1247,13 @@ function updateCatStatus() {
     const statusEl = document.getElementById(`cat-status-${cat.id}`);
     if (!statusEl) return;
     if (loaded < total) {
-      statusEl.innerHTML = `<span class="cat-badge gray">${loaded}/${total} 已加载</span>`;
+      statusEl.innerHTML = `<span class="cat-badge gray">${loaded}/${total} LOADED</span>`;
     } else if (fired.length >= 2) {
-      statusEl.innerHTML = `<span class="cat-badge red">${fired.length}个已触发</span><span class="cat-badge orange" style="margin-left:4px;">${warn.length}个预警</span>`;
+      statusEl.innerHTML = `<span class="cat-badge red">${fired.length} TRIGGERED</span><span class="cat-badge orange" style="margin-left:4px;">${warn.length} WARN</span>`;
     } else if (warn.length >= 1) {
-      statusEl.innerHTML = `<span class="cat-badge orange">${warn.length}个预警</span>`;
+      statusEl.innerHTML = `<span class="cat-badge orange">${warn.length} WARNING</span>`;
     } else {
-      statusEl.innerHTML = `<span class="cat-badge green">正常</span>`;
+      statusEl.innerHTML = `<span class="cat-badge green">NOMINAL</span>`;
     }
   });
 }
@@ -999,17 +1268,17 @@ function updateFooter() {
 
   if (loaded < total) {
     dot.className = 'footer-dot dot-loading';
-    status.textContent = `加载中 ${loaded}/${total}`;
+    status.textContent = `LOADING ${loaded}/${total}`;
   } else {
     dot.className = 'footer-dot dot-ok';
-    status.textContent = pyodideReady ? '实时数据' : '演示数据（离线）';
+    status.textContent = pyodideReady ? 'LIVE DATA' : 'DEMO MODE (OFFLINE)';
     time.textContent = new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai', hour: '2-digit', minute: '2-digit' });
   }
 }
 
-// ─────────────────────────────────────────────────────
-// FALLBACK DEMO DATA (2026-05-18 real market snapshot)
-// ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// 演示数据（2026-05-18 市场快照）
+// ═══════════════════════════════════════════════════════
 function loadFallbackData() {
   const demo = {
     winda_pe:          { value: 99.2, spark: [88,90,92,94,95,96,97,97,98,98,98,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99,99] },
@@ -1040,9 +1309,9 @@ function loadFallbackData() {
   }
 }
 
-// ─────────────────────────────────────────────────────
-// PYODIDE LOADER
-// ─────────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════════
+// Pyodide 数据加载器
+// ═══════════════════════════════════════════════════════
 async function initPyodideAndLoad() {
   try {
     updateFooter();
@@ -1123,7 +1392,7 @@ try:
 except:
     results['north_flow'] = None
 
-# 成交额 (东方财富)
+# 成交额
 try:
     r2 = requests.get("https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&invt=2&fields=f12,f14,f6&secids=1.000001,0.399001", timeout=8)
     items2 = r2.json().get('data',{}).get('diff',[])
@@ -1132,7 +1401,7 @@ try:
 except:
     results['volume_amount'] = None
 
-# Fallbacks
+# 后备数据
 fallbacks = {
     'small_large_pe': {'value': 173, 'spark': [130,135,140,145,150,155,158,162,165,167,169,170,171,172,172,173,173,173,173,173]},
     'margin_ratio': {'value': 9.2, 'spark': [7.2,7.5,7.8,8.0,8.2,8.5,8.8,9.0,9.2,9.3,9.4,9.3,9.2,9.1,9.0,8.9,8.8,8.7,8.6,8.5]},
